@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alishan - Premium Loader</title>
+  <title>Alishan - Premium Custom Loader</title>
   <style>
-    /* Google Fonts for a Premium Serif */
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap');
+    /* Premium Serif Typography */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
 
-    /* Reset & Base Setup */
     * {
       margin: 0;
       padding: 0;
@@ -16,164 +15,204 @@
     }
 
     body {
-      background-color: #0a0a0c; /* Obsidian/Charcoal dark */
+      background-color: #080808; /* Deeper, richer black */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      font-family: 'Cinzel', serif;
     }
 
-    /* Container */
-    .loader-container {
+    /* Cinematic Ambient Backlight */
+    .ambient-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(8, 8, 8, 0) 70%);
+      border-radius: 50%;
+      z-index: 0;
+      animation: pulseGlow 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .loader-stage {
       position: relative;
-      width: 250px;
-      height: 250px;
+      width: 300px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      z-index: 1;
+    }
+
+    /* Custom Angular Cloche */
+    .cloche-container {
+      position: absolute;
+      bottom: 50px; /* Sits exactly on the plate */
+      width: 120px;
+      height: 90px;
       display: flex;
       justify-content: center;
-      align-items: center;
+      transform-origin: bottom center;
+      /* Custom easing: slow anticipation, fast lift, gentle settle */
+      animation: bespokeLift 4s infinite cubic-bezier(0.77, 0, 0.175, 1);
+      z-index: 3;
     }
 
-    /* SVG Styling */
     .cloche-svg {
       width: 100%;
       height: 100%;
+      filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));
+    }
+
+    .lux-stroke {
+      fill: none;
+      stroke: #E6CBA8; /* Champagne gold - more elegant than yellow gold */
+      stroke-width: 1.5;
+      stroke-miterlimit: 10;
+    }
+
+    .lux-fill {
+      fill: #E6CBA8;
+    }
+
+    /* The Plate / Horizon Line */
+    .plate-line {
       position: absolute;
+      bottom: 48px;
+      width: 160px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #E6CBA8 50%, transparent 100%);
+      z-index: 4;
+      opacity: 0.8;
+    }
+
+    /* The Masking Container for Typography */
+    .text-mask-container {
+      position: absolute;
+      bottom: 50px;
+      width: 200px;
+      height: 60px; /* Limits the visibility height */
+      overflow: hidden; /* This is the secret to the cinematic reveal */
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
       z-index: 2;
     }
 
-    .gold-stroke {
-      fill: none;
-      stroke: #d4af37; /* Premium metallic gold */
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .gold-fill {
-      fill: #d4af37;
-    }
-
-    /* Animation Elements */
-    .cloche-dome {
-      transform-origin: center;
-      /* Cubic-bezier adds a realistic "heavy" lift and smooth settle */
-      animation: liftDome 4s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
-    }
-
-    .steam {
-      fill: none;
-      stroke: #d4af37;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      opacity: 0;
-      filter: blur(1px);
-    }
-
-    .steam-1 {
-      animation: riseSteam 4s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      animation-delay: 0.6s; /* Starts right as cloche lifts */
-    }
-
-    .steam-2 {
-      animation: riseSteam 4s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      animation-delay: 0.8s;
-    }
-
-    /* Brand Typography */
+    /* Typography & Light Sweep */
     .brand-text {
-      position: absolute;
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: #d4af37;
-      letter-spacing: 0.4em;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      z-index: 1;
-      opacity: 0;
-      /* Positioning slightly up to sit perfectly above the plate */
-      transform: translateY(10px);
-      text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-      animation: revealText 4s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+      padding-bottom: 5px;
+      
+      /* The text starts pushed down below the mask boundary */
+      transform: translateY(100%);
+      animation: textRise 4s infinite cubic-bezier(0.77, 0, 0.175, 1);
+
+      /* Metallic Shimmer Effect */
+      background: linear-gradient(
+        120deg, 
+        #a67c00 0%, 
+        #bf953f 25%, 
+        #fcf6ba 50%, 
+        #b38728 75%, 
+        #fdffcc 100%
+      );
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
     }
 
-    /* --- Keyframes --- */
+    .shimmer-active {
+      animation: 
+        textRise 4s infinite cubic-bezier(0.77, 0, 0.175, 1),
+        shimmerSweep 4s infinite linear;
+    }
 
-    /* The Cloche lifts up and fades out to reveal the interior */
-    @keyframes liftDome {
+    /* --- Choreographed Keyframes --- */
+
+    @keyframes bespokeLift {
       0%, 15% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
+        transform: translateY(0);
       }
-      30% {
-        transform: translateY(-40px) scale(0.95);
-        opacity: 0;
-      }
-      80% {
-        transform: translateY(-40px) scale(0.95);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-    }
-
-    /* The steam rises elegantly and fades away */
-    @keyframes riseSteam {
-      0% {
-        transform: translateY(10px) scale(0.8);
-        opacity: 0;
-      }
-      20% {
-        opacity: 0.7;
-      }
-      50% {
-        transform: translateY(-30px) scale(1.1);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(-30px) scale(1.1);
-        opacity: 0;
-      }
-    }
-
-    /* The text takes the place of the steam, glowing into existence */
-    @keyframes revealText {
-      0%, 25% {
-        opacity: 0;
-        transform: translateY(15px);
-        filter: blur(4px);
-      }
-      45%, 70% {
-        opacity: 1;
-        transform: translateY(5px);
-        filter: blur(0px);
+      35%, 75% {
+        transform: translateY(-70px); /* Lifts high enough to clear the text */
+        opacity: 0; /* Fades out smoothly while rising */
       }
       85%, 100% {
-        opacity: 0;
-        transform: translateY(5px);
-        filter: blur(4px);
+        transform: translateY(0);
+        opacity: 1;
       }
+    }
+
+    @keyframes textRise {
+      0%, 20% {
+        transform: translateY(100%);
+        letter-spacing: 0.1em;
+        opacity: 0;
+      }
+      35%, 75% {
+        transform: translateY(0);
+        letter-spacing: 0.35em; /* Expands slightly as it settles */
+        opacity: 1;
+      }
+      85%, 100% {
+        transform: translateY(100%);
+        letter-spacing: 0.1em;
+        opacity: 0;
+      }
+    }
+
+    @keyframes shimmerSweep {
+      0%, 35% {
+        background-position: 200% center;
+      }
+      50%, 75% {
+        background-position: -200% center;
+      }
+      100% {
+        background-position: -200% center;
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 15% { opacity: 0.3; transform: scale(0.9); }
+      35%, 75% { opacity: 1; transform: scale(1.1); }
+      85%, 100% { opacity: 0.3; transform: scale(0.9); }
     }
   </style>
 </head>
 <body>
 
-  <div class="loader-container">
-    <svg viewBox="0 0 120 120" class="cloche-svg">
-      <path class="steam steam-1" d="M 45,75 Q 35,45 50,15" />
-      <path class="steam steam-2" d="M 75,75 Q 85,45 70,15" />
-      
-      <g class="cloche-dome">
-        <path class="gold-stroke" d="M 20,80 C 20,20 100,20 100,80" />
-        <circle class="gold-fill" cx="60" cy="22" r="4" />
-      </g>
-      
-      <ellipse class="gold-stroke" cx="60" cy="82" rx="45" ry="3" />
-    </svg>
+  <div class="ambient-glow"></div>
 
-    <div class="brand-text">Alishan</div>
+  <div class="loader-stage">
+    
+    <!-- The Custom Cloche -->
+    <div class="cloche-container">
+      <svg viewBox="0 0 100 80" class="cloche-svg">
+        <!-- Sleek, architectural cloche path -->
+        <path class="lux-stroke" d="M 10,75 C 10,40 30,20 50,20 C 70,20 90,40 90,75" />
+        <!-- Sharp top handle -->
+        <path class="lux-fill" d="M 48,20 L 48,10 L 52,10 L 52,20 Z" />
+        <rect class="lux-fill" x="45" y="8" width="10" height="2" />
+      </svg>
+    </div>
+
+    <!-- The Masking Container -->
+    <div class="text-mask-container">
+      <!-- Added both animations via class -->
+      <div class="brand-text shimmer-active">Alishan</div>
+    </div>
+
+    <!-- The Base Plate Line -->
+    <div class="plate-line"></div>
+
   </div>
 
 </body>
